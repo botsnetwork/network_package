@@ -1,5 +1,6 @@
-const initBot = require("./init-bot");
-const RabbitMQ = require("./rabbit-mq");
+require("dotenv").config();
+const initBot = require("./lib/init-bot");
+const RabbitMQ = require("./lib/rabbit-mq");
 
 module.exports = {
   initBot,

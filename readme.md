@@ -85,11 +85,19 @@ npm install telegram_bot_network
 1. Initialize the Package:
 
 ```js
+const { Telegraf } = require("telegraf");
 const { initBot } = require("telegram_bot_network");
 
-const bot = new Telegraf("YOUR_BOT_TOKEN");
+const bot = new Telegraf(process.env.BOT_TOKEN);
 
-initBot(bot /* telegraf instance */, /* admin_id = ADMIN_ID */, /* rabbitMQQueue = "bot-events" */);
+initBot({
+  bot,
+  admin_id: /* Telegram admin id */,
+  mongodb_uri: /* mongodb_uri */,
+  rabbitmq_queue: "bot-events" /* can use custom */,
+});
+
+bot.launch();
 ```
 
 ## Contributing
