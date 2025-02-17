@@ -1,0 +1,9 @@
+{
+  "extends": "@tsconfig/recommended/tsconfig.json",
+  "compilerOptions": {
+    "preserveConstEnums": true,
+    "lib": ["esnext", "dom"]
+  },
+  "include": ["/*"],
+  "exclude": ["**/*.spec.ts"]
+}
