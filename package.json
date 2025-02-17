@@ -1,0 +1,25 @@
+{
+  "name": "telegram_bot_network",
+  "version": "1.0.0",
+  "description": "powerful Node.js package designed for bot network administration. It provides seamless integration between multiple bots, enabling advanced features like multi-posting and centralized user management. Built with scalability in mind, it leverages RabbitMQ for inter-bot communication and MongoDB for persistent user data storage.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/botsnetwork/network_package.git"
+  },
+  "keywords": [
+    "telegram",
+    "tg",
+    "bot",
+    "utils"
+  ],
+  "author": "xMentory",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/botsnetwork/network_package/issues"
+  },
+  "homepage": "https://github.com/botsnetwork/network_package#readme"
+}
