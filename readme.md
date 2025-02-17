@@ -1,27 +1,81 @@
-# bot_network_package
+# Telegram Bot Functionality
 
-`bot_network_package` is a powerful Node.js package designed for bot network administration. It provides seamless integration between multiple bots, enabling advanced features like multi-posting and centralized user management. Built with scalability in mind, it leverages **RabbitMQ** for inter-bot communication and **MongoDB** for persistent user data storage.
+This README provides an overview of the functionality implemented in the Telegram bot. The bot is designed to manage users, broadcast messages, and provide admin-specific commands for monitoring user data.
 
-## Key Features
+---
 
-- **Multi-Posting via RabbitMQ**: Easily broadcast messages across multiple bots using RabbitMQ as a message broker. Perfect for managing large-scale bot networks.
-- **Centralized User Management**: Store and manage user data in **MongoDB**, ensuring consistency and persistence across your bot network.
-- **Scalable Architecture**: Designed to handle growing networks of bots, making it ideal for projects of any size.
-- **Easy Integration**: Simple API and clear documentation allow for quick setup and integration into existing bot projects.
-- **Cross-Bot Communication**: Enable bots to communicate with each other, facilitating complex workflows and coordinated actions.
+## Features
 
-## Use Cases
+### 1. Middleware for Updating Users
 
-- **Social Media Management**: Manage multiple bots for posting content across different platforms simultaneously.
-- **User Analytics**: Track and analyze user interactions across your bot network with centralized MongoDB storage.
-- **Automated Workflows**: Coordinate tasks between bots using RabbitMQ for efficient automation.
+A middleware is implemented to automatically update or create user records in the database during interactions with the bot.
+
+- **Key Features**:
+  - Updates or creates user information such as `telegramId`, `username`, `firstName`, `lastName`, `isActive`, and `lastInteraction`.
+  - Ensures that the `lastInteraction` field is updated with the current timestamp to track user activity.
+  - Uses MongoDB's `findOneAndUpdate` method with the `upsert: true` option to handle both updates and new user creation.
+
+---
+
+### 2. RabbitMQ Integration for Broadcasting Messages
+
+The bot integrates with RabbitMQ to consume messages from a queue and broadcast them to all registered users.
+
+- **Key Features**:
+  - Listens for messages with the action `"broadcast"`.
+  - Retrieves all active users from the database and sends the broadcast message to each user's `telegramId` using the Telegram Bot API.
+  - Logs a message if no users are found in the database.
+
+---
+
+### 3. Admin Commands
+
+#### `/users`
+
+This command allows the bot administrator to retrieve statistics about the total number of users and the number of new users registered today.
+
+- **Key Features**:
+  - Accessible only by the admin (verified via `ADMIN_ID`).
+  - Provides:
+    - Total number of users in the database.
+    - Number of new users registered since the start of the current day.
+  - Sends the results as a formatted message to the admin.
+
+#### `/get_users`
+
+This command allows the bot administrator to retrieve a detailed list of all registered users.
+
+- **Key Features**:
+  - Accessible only by the admin (verified via `ADMIN_ID`).
+  - Retrieves all users from the database and formats their details into a readable list.
+  - Each user entry includes their name (or username if the name is unavailable) and their `chat_id` (`telegramId`).
+  - If no users are found, it informs the admin that there are no registered users.
+
+---
+
+### 4. Error Handling
+
+The bot includes robust error handling to ensure smooth operation:
+
+- Logs errors for debugging purposes.
+- Sends appropriate error messages to the admin in case of failures (e.g., database errors, message sending errors).
+
+---
+
+## Usage
+
+### Prerequisites
+
+- Node.js installed on your machine.
+- MongoDB database for storing user information.
+- RabbitMQ server for message broadcasting.
 
 ## Installation
 
 Install the package via npm:
 
 ```bash
-npm install bot_network_package
+npm install telegram_bot_network
 ```
 
 ## Quick Start
@@ -31,16 +85,11 @@ npm install bot_network_package
 1. Initialize the Package:
 
 ```js
-const { initBot } = require("bot_network_package");
+const { initBot } = require("telegram_bot_network");
 
 const bot = new Telegraf("YOUR_BOT_TOKEN");
 
-const botNetwork = initBot(
-  bot /* telegraf instance */ /* rabbitMQQueue = "bot-events" */
-);
-
-// Start the bot network
-botNetwork.start();
+initBot(bot /* telegraf instance */, /* admin_id = ADMIN_ID */, /* rabbitMQQueue = "bot-events" */);
 ```
 
 ## Contributing
